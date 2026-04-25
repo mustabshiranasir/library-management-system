@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Library Management System – COMSATS Attock</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ── Reset & Variables ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #0f0e0c;
+  --surface:   #1a1916;
+  --card:      #211f1c;
+  --border:    #2e2c28;
+  --accent:    #c9a84c;
+  --accent2:   #7ec8a0;
+  --accent3:   #e07d54;
+  --text:      #e8e4db;
+  --muted:     #7a776d;
+  --danger:    #e05454;
+  --success:   #4caf7e;
+  --warning:   #c9a84c;
+  --radius:    10px;
+  --font-head: 'DM Serif Display', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: 240px;
+  height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 28px 0;
+  z-index: 100;
+  transition: transform .3s ease;
+}
+
+.logo {
+  padding: 0 24px 28px;
+  border-bottom: 1px solid var(--border);
+}
+.logo-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+.logo h1 {
+  font-family: var(--font-head);
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--accent);
+}
+.logo p {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  font-variant: small-caps;
+  letter-spacing: .06em;
+}
+
+nav { flex: 1; padding: 20px 12px; overflow-y: auto; }
+
+.nav-section {
+  font-size: 10px;
+  letter-spacing: .12em;
+  font-variant: small-caps;
+  color: var(--muted);
+  padding: 16px 12px 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+  transition: all .18s;
+  margin-bottom: 2px;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+.nav-item:hover { color: var(--text); background: var(--card); }
+.nav-item.active { color: var(--accent); background: rgba(201,168,76,.1); }
+.nav-item .icon { font-size: 16px; width: 20px; flex-shrink: 0; }
+.nav-item .badge {
+  margin-left: auto;
+  background: var(--danger);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 99px;
+  font-family: var(--font-mono);
+}
+
+.sidebar-footer {
+  padding: 20px 24px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ── Main ── */
+.main {
+  margin-left: 240px;
+  min-height: 100vh;
+  padding: 32px 36px;
+}
+
+/* ── Topbar ── */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+.page-title {
+  font-family: var(--font-head);
+  font-size: 28px;
+  font-style: italic;
+  color: var(--text);
+}
+.page-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 14px;
+  font-size: 13px;
+}
+.search-bar input {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 13px;
+  width: 220px;
+}
+.search-bar input::placeholder { color: var(--muted); }
+
+/* ── Sections ── */
+.section { display: none; }
+.section.active { display: block; }
+
+/* ── Stat Cards ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: transform .18s, border-color .18s;
+}
+.stat-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+.stat-label { font-size: 11px; color: var(--muted); letter-spacing: .05em; text-transform: uppercase; margin-bottom: 8px; }
+.stat-value { font-family: var(--font-mono); font-size: 32px; font-weight: 500; color: var(--accent); }
+.stat-meta { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+/* ── Table ── */
+.table-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.table-title {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-style: italic;
+  color: var(--text);
+}
+.table-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+.tbl-actions { display: flex; gap: 8px; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all .15s;
+}
+.btn-primary   { background: var(--accent);  color: #0f0e0c; }
+.btn-primary:hover { filter: brightness(1.1); }
+.btn-secondary { background: var(--border);  color: var(--text); }
+.btn-secondary:hover { background: #3a3830; }
+.btn-danger    { background: var(--danger);  color: white; }
+.btn-success   { background: var(--success); color: white; }
+.btn-ghost     { background: none; border: 1px solid var(--border); color: var(--muted); }
+.btn-ghost:hover { color: var(--text); border-color: var(--text); }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th {
+  background: rgba(201,168,76,.07);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  text-align: left;
+  white-space: nowrap;
+}
+tbody tr {
+  border-top: 1px solid var(--border);
+  transition: background .12s;
+}
+tbody tr:hover { background: rgba(255,255,255,.03); }
+td { padding: 13px 24px; color: var(--text); vertical-align: middle; }
+td.mono { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+
+/* ── Badges / Tags ── */
+.badge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+.badge-green   { background: rgba(76,175,126,.15); color: var(--success); }
+.badge-yellow  { background: rgba(201,168,76,.15);  color: var(--warning); }
+.badge-red     { background: rgba(224,84,84,.15);   color: var(--danger);  }
+.badge-blue    { background: rgba(126,200,160,.15); color: var(--accent2); }
+.badge-grey    { background: rgba(122,119,109,.15); color: var(--muted);   }
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--border);
+  color: var(--muted);
+  font-size: 11px;
+  margin: 1px;
+}
+
+/* Stock bar */
+.stock-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.stock-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+  min-width: 60px;
+}
+.stock-fill { height: 100%; border-radius: 99px; transition: width .4s; }
+
+/* ── Modal ── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+}
+.overlay.open { opacity: 1; pointer-events: all; }
+
+.modal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 32px;
+  width: 480px;
+  max-width: 96vw;
+  transform: translateY(12px);
+  transition: transform .2s;
+}
+.overlay.open .modal { transform: translateY(0); }
+.modal-title {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-style: italic;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 1;
+}
+.form-row { margin-bottom: 16px; }
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 6px;
+}
+.form-input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  transition: border-color .15s;
+}
+.form-input:focus { border-color: var(--accent); }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
+
+/* ── Notification toast ── */
+.toast-wrap {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.toast {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--success);
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-size: 13px;
+  max-width: 300px;
+  animation: slideIn .25s ease;
+}
+.toast.error { border-left-color: var(--danger); }
+.toast.warn  { border-left-color: var(--warning); }
+
+@keyframes slideIn {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0);   opacity: 1; }
+}
+
+/* ── Chart bars ── */
+.mini-chart { display: flex; align-items: flex-end; gap: 4px; height: 60px; }
+.bar {
+  flex: 1;
+  background: linear-gradient(to top, var(--accent), rgba(201,168,76,.3));
+  border-radius: 4px 4px 0 0;
+  min-width: 18px;
+  cursor: pointer;
+  transition: filter .15s;
+  position: relative;
+}
+.bar:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  white-space: nowrap;
+  color: var(--text);
+  z-index: 10;
+}
+
+/* ── Responsive tweak ── */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .main { margin-left: 0; padding: 20px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── SIDEBAR ─────────────────────────────────── -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">📚</div>
+    <h1>Library<br>Management</h1>
+    <p>COMSATS Attock</p>
+  </div>
+
+  <nav>
+    <div class="nav-section">Overview</div>
+    <button class="nav-item active" onclick="goTo('dashboard',this)">
+      <span class="icon">🏠</span> Dashboard
+    </button>
+
+    <div class="nav-section">Catalog</div>
+    <button class="nav-item" onclick="goTo('books',this)">
+      <span class="icon">📖</span> Books
+    </button>
+    <button class="nav-item" onclick="goTo('inventory',this)">
+      <span class="icon">📦</span> Inventory
+    </button>
+
+    <div class="nav-section">People</div>
+    <button class="nav-item" onclick="goTo('members',this)">
+      <span class="icon">👤</span> Members
+    </button>
+    <button class="nav-item" onclick="goTo('staff',this)">
+      <span class="icon">🧑‍💼</span> Staff
+    </button>
+
+    <div class="nav-section">Transactions</div>
+    <button class="nav-item" onclick="goTo('loans',this)">
+      <span class="icon">📋</span> Loans
+      <span class="badge" id="loan-badge">6</span>
+    </button>
+    <button class="nav-item" onclick="goTo('fines',this)">
+      <span class="icon">💰</span> Fines
+      <span class="badge" id="fine-badge">4</span>
+    </button>
+    <button class="nav-item" onclick="goTo('requests',this)">
+      <span class="icon">📩</span> Requests
+      <span class="badge" id="req-badge">4</span>
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    DBS Lab Project<br>
+    Mr. Shahzad Rizwan<br>
+    FA23-BCS Batch · 2023–27
+  </div>
+</aside>
+
+<!-- ─── MAIN ─────────────────────────────────────── -->
+<main class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div>
+      <div class="page-title" id="page-title">Dashboard</div>
+      <div class="page-subtitle" id="page-subtitle">Library overview &amp; statistics</div>
+    </div>
+    <div class="search-bar">
+      <span>🔍</span>
+      <input type="text" placeholder="Search books, members…" id="globalSearch" oninput="globalSearch(this.value)"/>
+    </div>
+  </div>
+
+  <!-- ══ DASHBOARD ══ -->
+  <div class="section active" id="sec-dashboard">
+    <div class="stats-grid" id="stats-grid"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <!-- Recent loans -->
+      <div class="table-card">
+        <div class="table-header">
+          <div>
+            <div class="table-title">Recent Loans</div>
+            <div class="table-meta">Latest borrowing activity</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Member</th><th>Book</th><th>Due</th><th>Status</th></tr></thead>
+            <tbody id="dash-loans"></tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Pending requests -->
+      <div class="table-card">
+        <div class="table-header">
+          <div>
+            <div class="table-title">Pending Requests</div>
+            <div class="table-meta">Awaiting approval</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Member</th><th>Book</th><th>Date</th></tr></thead>
+            <tbody id="dash-requests"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top books bar chart -->
+    <div class="table-card" style="margin-top:20px;">
+      <div class="table-header">
+        <div>
+          <div class="table-title">Most Borrowed Books</div>
+          <div class="table-meta">Borrow frequency</div>
+        </div>
+      </div>
+      <div style="padding:24px;" id="top-books-chart"></div>
+    </div>
+  </div>
+
+  <!-- ══ BOOKS ══ -->
+  <div class="section" id="sec-books">
+    <div class="table-card">
+      <div class="table-header">
+        <div>
+          <div class="table-title">Books Catalog</div>
+          <div class="table-meta" id="books-count"></div>
+        </div>
+        <div class="tbl-actions">
+          <button class="btn btn-primary" onclick="openModal('add-book')">＋ Add Book</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Title</th><th>Authors</th><th>Categories</th><th>Edition</th><th>ISBN</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="books-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ INVENTORY ══ -->
+  <div class="section" id="sec-inventory">
+    <div class="table-card">
+      <div class="table-header">
+        <div>
+          <div class="table-title">Inventory</div>
+          <div class="table-meta">Shelf stock management</div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Title</th><th>Location</th><th>Available</th><th>Total</th><th>Stock Level</th></tr>
+          </thead>
+          <tbody id="inv-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MEMBERS ══ -->
+  <div class="section" id="sec-members">
+    <div class="table-card">
+      <div class="table-header">
+        <div>
+          <div class="table-title">Members</div>
+          <div class="table-meta" id="members-count"></div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('add-member')">＋ Add Member</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Name</th><th>Type</th><th>Phone</th><th>Address</th><th>Active Loans</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="members-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ STAFF ══ -->
+  <div class="section" id="sec-staff">
+    <div class="table-card">
+      <div class="table-header">
+        <div>
+          <div class="table-title">Staff Directory</div>
+          <div class="table-meta" id="staff-count"></div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('add-staff')">＋ Add Staff</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Name</th><th>Role</th><th>Phone</th><th>Sections</th><th>Address</th></tr>
+          </thead>
+          <tbody id="staff-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LOANS ══ -->
+  <div class="section" id="sec-loans">
+    <div class="table-card">
+      <div class="table-header">
+        <div>
+          <div class="table-title">Loan Records</div>
+          <div class="table-meta" id="loans-count"></div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('add-loan')">＋ Issue Loan</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Loan ID</th><th>Member</th><th>Book</th><th>Issue Date</th><th>Due Date</th><th>Return Date</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="loans-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FINES ══ -->
+  <div class="section" id="sec-fines">
+    <div class="table-card">
+      <div class="table-header">
+        <div>
+          <div class="table-title">Fines</div>
+          <div class="table-meta" id="fines-count"></div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Fine ID</th><th>Member</th><th>Book</th><th>Overdue Days</th><th>Amount</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="fines-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ REQUESTS ══ -->
+  <div class="section" id="sec-requests">
+    <div class="table-card">
+      <div class="table-header">
+        <div>
+          <div class="table-title">Book Requests</div>
+          <div class="table-meta" id="req-count"></div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Req ID</th><th>Member</th><th>Book</th><th>Date</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="req-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ─── MODALS ─────────────────────────────────── -->
+<div class="overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-box">
+    <div class="modal-title">
+      <span id="modal-title-text">Modal</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ─── TOASTS ────────────────────────────────── -->
+<div class="toast-wrap" id="toasts"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  DATA STORE (mirrors SQL tables)
+// ═══════════════════════════════════════════════
+const DB = {
+  books: [
+    {id:101, title:'Data Structures',         edition:'3rd', isbn:'978-123456789', authors:['Ellis Horowitz','Sartaj Sahni'],         categories:['Programming','Computer Science']},
+    {id:102, title:'Database Systems',        edition:'7th', isbn:'978-987654321', authors:['C.J. Date','A. Kannan'],                 categories:['DBMS','Computer Science']},
+    {id:103, title:'Algorithms',              edition:'5th', isbn:'978-135794680', authors:['Thomas H. Cormen','Charles E. Leiserson'],categories:['Algorithms','Computer Science']},
+    {id:104, title:'Operating Systems',       edition:'4th', isbn:'978-246813579', authors:['Abraham Silberschatz'],                  categories:['Systems','Computer Science']},
+    {id:105, title:'Computer Networks',       edition:'6th', isbn:'978-369258147', authors:['Andrew Tanenbaum'],                      categories:['Networking','Computer Science']},
+    {id:106, title:'Artificial Intelligence', edition:'2nd', isbn:'978-112233445', authors:['Stuart Russell','Peter Norvig'],          categories:['AI','Computer Science']},
+    {id:107, title:'Software Engineering',    edition:'9th', isbn:'978-998877665', authors:['Ian Sommerville'],                       categories:['Engineering','Software']},
+    {id:108, title:'Discrete Mathematics',    edition:'1st', isbn:'978-334455667', authors:['Kenneth H. Rosen'],                      categories:['Mathematics','Discrete Math']},
+    {id:109, title:'Linear Algebra',          edition:'3rd', isbn:'978-556677889', authors:['Gilbert Strang'],                        categories:['Mathematics','Algebra']},
+    {id:110, title:'Calculus',                edition:'8th', isbn:'978-778899001', authors:['James Stewart'],                         categories:['Mathematics','Calculus']},
+  ],
+  members: [
+    {id:1, name:'John Doe',       type:'Student', phones:['555-1234','555-5678'], address:'123 Elm Street'},
+    {id:2, name:'Jane Smith',     type:'Faculty', phones:['555-9876'],            address:'456 Maple Avenue'},
+    {id:3, name:'Ali Hassan',     type:'Student', phones:['555-1111'],            address:'789 Oak Lane'},
+    {id:4, name:'Sara Ahmed',     type:'Student', phones:['555-2222'],            address:'12 Pine Road'},
+    {id:5, name:'Dr. Malik',      type:'Faculty', phones:['555-3333','555-4444'], address:'34 Cedar Blvd'},
+    {id:6, name:'Usman Tariq',    type:'Staff',   phones:['555-5555'],            address:'56 Walnut Drive'},
+    {id:7, name:'Ayesha Khan',    type:'Student', phones:['555-6666'],            address:'78 Birch Court'},
+    {id:8, name:'Bilal Chaudhry', type:'Student', phones:['555-7777'],            address:'90 Spruce Terrace'},
+  ],
+  staff: [
+    {id:1, name:'Alice Johnson', role:'Librarian', phones:['555-2345'],           sections:['Fiction','Science'],        address:'12 Green Lane'},
+    {id:2, name:'Bob Brown',     role:'Assistant', phones:['555-3456','555-6789'],sections:['Technology','Reference'],   address:'34 Blue Street'},
+    {id:3, name:'Carol White',   role:'Cataloger', phones:['555-9012'],           sections:['Cataloging','Archives'],    address:'56 Red Avenue'},
+    {id:4, name:'David Lee',     role:'Security',  phones:['555-3210'],           sections:['Entrance','Main Hall'],     address:'78 Yellow Road'},
+  ],
+  inventory: [
+    {id:1, bookId:101, title:'Data Structures',         shelf:'A-1-10', stock:5, total:10},
+    {id:2, bookId:102, title:'Database Systems',        shelf:'B-2-20', stock:3, total:8},
+    {id:3, bookId:103, title:'Algorithms',              shelf:'A-2-05', stock:6, total:12},
+    {id:4, bookId:104, title:'Operating Systems',       shelf:'C-1-15', stock:4, total:7},
+    {id:5, bookId:105, title:'Computer Networks',       shelf:'C-2-10', stock:2, total:5},
+    {id:6, bookId:106, title:'AI',                      shelf:'D-1-08', stock:7, total:10},
+    {id:7, bookId:107, title:'Software Engineering',    shelf:'D-2-12', stock:3, total:6},
+    {id:8, bookId:108, title:'Discrete Mathematics',    shelf:'E-1-03', stock:8, total:15},
+    {id:9, bookId:109, title:'Linear Algebra',          shelf:'E-2-07', stock:5, total:9},
+    {id:10,bookId:110, title:'Calculus',                shelf:'F-1-20', stock:4, total:11},
+  ],
+  loans: [
+    {id:'L001', memberId:1, bookId:101, issue:'2024-12-01', due:'2024-12-15', returned:null},
+    {id:'L002', memberId:1, bookId:102, issue:'2024-12-03', due:'2024-12-17', returned:null},
+    {id:'L003', memberId:2, bookId:103, issue:'2024-12-05', due:'2024-12-20', returned:null},
+    {id:'L004', memberId:3, bookId:104, issue:'2024-12-02', due:'2024-12-16', returned:'2024-12-14'},
+    {id:'L005', memberId:4, bookId:105, issue:'2024-12-10', due:'2024-12-24', returned:null},
+    {id:'L006', memberId:5, bookId:106, issue:'2024-11-25', due:'2024-12-09', returned:'2024-12-08'},
+    {id:'L007', memberId:7, bookId:108, issue:'2024-12-07', due:'2024-12-21', returned:null},
+    {id:'L008', memberId:8, bookId:109, issue:'2024-12-08', due:'2024-12-22', returned:null},
+  ],
+  fines: [
+    {id:'F001', memberId:1, bookId:101, days:5,  amount:10.00, status:'Unpaid'},
+    {id:'F002', memberId:1, bookId:102, days:3,  amount:10.00, status:'Unpaid'},
+    {id:'F003', memberId:2, bookId:103, days:7,  amount:7.00,  status:'Paid'},
+    {id:'F004', memberId:4, bookId:105, days:2,  amount:4.00,  status:'Unpaid'},
+    {id:'F005', memberId:8, bookId:109, days:4,  amount:8.00,  status:'Unpaid'},
+  ],
+  requests: [
+    {id:'R001', memberId:1, bookId:106, date:'2024-12-05', status:'Pending'},
+    {id:'R002', memberId:1, bookId:107, date:'2024-12-05', status:'Pending'},
+    {id:'R003', memberId:2, bookId:110, date:'2024-12-06', status:'Approved'},
+    {id:'R004', memberId:3, bookId:108, date:'2024-12-07', status:'Fulfilled'},
+    {id:'R005', memberId:4, bookId:109, date:'2024-12-08', status:'Pending'},
+    {id:'R006', memberId:7, bookId:103, date:'2024-12-09', status:'Approved'},
+    {id:'R007', memberId:8, bookId:101, date:'2024-12-10', status:'Pending'},
+  ],
+};
+
+// ─── Helpers ──────────────────────────────────
+const $  = id => document.getElementById(id);
+const mem = id => DB.members.find(m=>m.id===id);
+const bk  = id => DB.books.find(b=>b.id===id);
+
+function memberTypeBadge(t) {
+  const map = {Student:'badge-blue',Faculty:'badge-green',Staff:'badge-yellow',Guest:'badge-grey'};
+  return `<span class="badge ${map[t]||'badge-grey'}">${t}</span>`;
+}
+function statusBadge(s) {
+  const map = {Active:'badge-blue',Returned:'badge-green',Overdue:'badge-red',Paid:'badge-green',Unpaid:'badge-red',Pending:'badge-yellow',Approved:'badge-green',Rejected:'badge-red',Fulfilled:'badge-blue'};
+  return `<span class="badge ${map[s]||'badge-grey'}">${s}</span>`;
+}
+
+function loanStatus(loan) {
+  if (loan.returned) return 'Returned';
+  const due = new Date(loan.due);
+  return due < new Date() ? 'Overdue' : 'Active';
+}
+
+// ─── Navigation ───────────────────────────────
+const pageMeta = {
+  dashboard:  ['Dashboard',  'Library overview & statistics'],
+  books:      ['Books',      'Full catalog of available titles'],
+  inventory:  ['Inventory',  'Shelf locations & stock levels'],
+  members:    ['Members',    'Registered library members'],
+  staff:      ['Staff',      'Library staff directory'],
+  loans:      ['Loans',      'Book borrowing records'],
+  fines:      ['Fines',      'Overdue fines management'],
+  requests:   ['Requests',   'Member book requests'],
+};
+
+function goTo(page, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  $('sec-' + page).classList.add('active');
+  btn.classList.add('active');
+  const [t, s] = pageMeta[page];
+  $('page-title').textContent = t;
+  $('page-subtitle').textContent = s;
+  render[page]?.();
+}
+
+// ─── Renderers ───────────────────────────────
+const render = {};
+
+render.dashboard = () => {
+  const activeLoans   = DB.loans.filter(l => !l.returned).length;
+  const unpaidFines   = DB.fines.filter(f => f.status==='Unpaid').length;
+  const pendingReqs   = DB.requests.filter(r => r.status==='Pending').length;
+  const totalFines    = DB.fines.filter(f=>f.status==='Unpaid').reduce((a,f)=>a+f.amount,0);
+
+  $('stats-grid').innerHTML = [
+    ['Total Books',   DB.books.length,     'titles in catalog'],
+    ['Members',       DB.members.length,   'registered users'],
+    ['Active Loans',  activeLoans,          'books checked out'],
+    ['Unpaid Fines',  unpaidFines,          'require payment'],
+    ['Outstanding',   'Rs. '+totalFines.toFixed(0), 'fine amount'],
+    ['Pending Reqs',  pendingReqs,          'awaiting approval'],
+  ].map(([l,v,m])=>`
+    <div class="stat-card">
+      <div class="stat-label">${l}</div>
+      <div class="stat-value">${v}</div>
+      <div class="stat-meta">${m}</div>
+    </div>`).join('');
+
+  $('dash-loans').innerHTML = DB.loans.slice(-5).reverse().map(l=>`
+    <tr>
+      <td>${mem(l.memberId)?.name||'—'}</td>
+      <td>${bk(l.bookId)?.title||'—'}</td>
+      <td class="mono">${l.due}</td>
+      <td>${statusBadge(loanStatus(l))}</td>
+    </tr>`).join('');
+
+  $('dash-requests').innerHTML = DB.requests.filter(r=>r.status==='Pending').map(r=>`
+    <tr>
+      <td>${mem(r.memberId)?.name||'—'}</td>
+      <td>${bk(r.bookId)?.title||'—'}</td>
+      <td class="mono">${r.date}</td>
+    </tr>`).join('');
+
+  // bar chart
+  const counts = {};
+  DB.loans.forEach(l => { counts[l.bookId] = (counts[l.bookId]||0)+1; });
+  const top = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const max = Math.max(...top.map(x=>x[1]));
+  $('top-books-chart').innerHTML = `
+    <div style="display:flex;gap:16px;align-items:flex-end;">
+      ${top.map(([id,cnt])=>{
+        const title = bk(Number(id))?.title||'#'+id;
+        const pct = Math.round((cnt/max)*100);
+        return `<div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">${cnt}</div>
+          <div class="bar" style="height:${pct*0.7}px;" data-tip="${title}: ${cnt} loans"></div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;max-width:60px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" title="${title}">${title.split(' ')[0]}</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+};
+
+render.books = () => {
+  $('books-count').textContent = DB.books.length + ' titles';
+  $('books-tbody').innerHTML = DB.books.map(b=>`
+    <tr>
+      <td class="mono">B${b.id}</td>
+      <td><strong>${b.title}</strong></td>
+      <td>${b.authors.join(', ')}</td>
+      <td>${b.categories.map(c=>`<span class="tag">${c}</span>`).join('')}</td>
+      <td>${b.edition}</td>
+      <td class="mono">${b.isbn}</td>
+      <td>
+        <button class="btn btn-ghost" style="padding:5px 10px;font-size:12px;" onclick="editBook(${b.id})">Edit</button>
+        <button class="btn btn-danger" style="padding:5px 10px;font-size:12px;" onclick="deleteBook(${b.id})">Del</button>
+      </td>
+    </tr>`).join('');
+};
+
+render.inventory = () => {
+  $('inv-tbody').innerHTML = DB.inventory.map(i=>{
+    const pct = Math.round((i.stock/i.total)*100);
+    const col = pct>60?'var(--success)':pct>30?'var(--warning)':'var(--danger)';
+    return `<tr>
+      <td class="mono">INV${String(i.id).padStart(3,'0')}</td>
+      <td>${i.title}</td>
+      <td class="mono">${i.shelf}</td>
+      <td><strong>${i.stock}</strong></td>
+      <td>${i.total}</td>
+      <td>
+        <div class="stock-bar-wrap">
+          <div class="stock-bar">
+            <div class="stock-fill" style="width:${pct}%;background:${col}"></div>
+          </div>
+          <span style="font-size:11px;color:var(--muted);font-family:var(--font-mono);">${pct}%</span>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+};
+
+render.members = () => {
+  $('members-count').textContent = DB.members.length + ' registered';
+  const activeLoansFor = id => DB.loans.filter(l=>l.memberId===id && !l.returned).length;
+  $('members-tbody').innerHTML = DB.members.map(m=>`
+    <tr>
+      <td class="mono">M${String(m.id).padStart(3,'0')}</td>
+      <td><strong>${m.name}</strong></td>
+      <td>${memberTypeBadge(m.type)}</td>
+      <td class="mono">${m.phones.join(', ')}</td>
+      <td>${m.address}</td>
+      <td><span style="font-family:var(--font-mono);font-weight:600;color:${activeLoansFor(m.id)?'var(--accent)':'var(--muted)'};">${activeLoansFor(m.id)}</span></td>
+      <td>
+        <button class="btn btn-ghost" style="padding:5px 10px;font-size:12px;" onclick="viewMember(${m.id})">View</button>
+      </td>
+    </tr>`).join('');
+};
+
+render.staff = () => {
+  $('staff-count').textContent = DB.staff.length + ' staff members';
+  $('staff-tbody').innerHTML = DB.staff.map(s=>`
+    <tr>
+      <td class="mono">S${String(s.id).padStart(3,'0')}</td>
+      <td><strong>${s.name}</strong></td>
+      <td><span class="badge badge-yellow">${s.role}</span></td>
+      <td class="mono">${s.phones.join(', ')}</td>
+      <td>${s.sections.map(x=>`<span class="tag">${x}</span>`).join('')}</td>
+      <td>${s.address}</td>
+    </tr>`).join('');
+};
+
+render.loans = () => {
+  $('loans-count').textContent = DB.loans.length + ' total records';
+  $('loans-tbody').innerHTML = DB.loans.map(l=>{
+    const st = loanStatus(l);
+    return `<tr>
+      <td class="mono">${l.id}</td>
+      <td>${mem(l.memberId)?.name||'—'}</td>
+      <td>${bk(l.bookId)?.title||'—'}</td>
+      <td class="mono">${l.issue}</td>
+      <td class="mono">${l.due}</td>
+      <td class="mono">${l.returned||'—'}</td>
+      <td>${statusBadge(st)}</td>
+      <td>${!l.returned?`<button class="btn btn-success" style="padding:5px 10px;font-size:12px;" onclick="returnBook('${l.id}')">Return</button>`:'—'}</td>
+    </tr>`;
+  }).join('');
+  $('loan-badge').textContent = DB.loans.filter(l=>!l.returned).length;
+};
+
+render.fines = () => {
+  $('fines-count').textContent = DB.fines.length + ' fine records';
+  $('fines-tbody').innerHTML = DB.fines.map(f=>`
+    <tr>
+      <td class="mono">${f.id}</td>
+      <td>${mem(f.memberId)?.name||'—'}</td>
+      <td>${bk(f.bookId)?.title||'—'}</td>
+      <td class="mono">${f.days} days</td>
+      <td class="mono">Rs. ${f.amount.toFixed(2)}</td>
+      <td>${statusBadge(f.status)}</td>
+      <td>${f.status==='Unpaid'?`<button class="btn btn-success" style="padding:5px 10px;font-size:12px;" onclick="payFine('${f.id}')">Mark Paid</button>`:'—'}</td>
+    </tr>`).join('');
+  $('fine-badge').textContent = DB.fines.filter(f=>f.status==='Unpaid').length;
+};
+
+render.requests = () => {
+  $('req-count').textContent = DB.requests.length + ' requests';
+  $('req-tbody').innerHTML = DB.requests.map(r=>`
+    <tr>
+      <td class="mono">${r.id}</td>
+      <td>${mem(r.memberId)?.name||'—'}</td>
+      <td>${bk(r.bookId)?.title||'—'}</td>
+      <td class="mono">${r.date}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>
+        ${r.status==='Pending'?`
+          <button class="btn btn-success"  style="padding:5px 10px;font-size:12px;" onclick="updateReq('${r.id}','Approved')">Approve</button>
+          <button class="btn btn-danger"   style="padding:5px 10px;font-size:12px;" onclick="updateReq('${r.id}','Rejected')">Reject</button>
+        `:'—'}
+      </td>
+    </tr>`).join('');
+  $('req-badge').textContent = DB.requests.filter(r=>r.status==='Pending').length;
+};
+
+// ─── Actions ─────────────────────────────────
+function returnBook(id) {
+  const l = DB.loans.find(x=>x.id===id);
+  if(l) { l.returned = new Date().toISOString().slice(0,10); render.loans(); toast('Book marked as returned ✓'); }
+}
+function payFine(id) {
+  const f = DB.fines.find(x=>x.id===id);
+  if(f) { f.status='Paid'; render.fines(); toast('Fine marked as paid ✓'); }
+}
+function updateReq(id, status) {
+  const r = DB.requests.find(x=>x.id===id);
+  if(r) { r.status=status; render.requests(); toast(`Request ${status.toLowerCase()} ✓`); }
+}
+function deleteBook(id) {
+  if(confirm('Delete this book?')) {
+    const i = DB.books.findIndex(b=>b.id===id);
+    if(i>-1) { DB.books.splice(i,1); render.books(); toast('Book deleted','error'); }
+  }
+}
+function editBook(id) {
+  const b = DB.books.find(x=>x.id===id);
+  openModal('edit-book', b);
+}
+function viewMember(id) {
+  const m = mem(id);
+  const loans = DB.loans.filter(l=>l.memberId===id);
+  const fines = DB.fines.filter(f=>f.memberId===id);
+  $('modal-title-text').textContent = m.name;
+  $('modal-body').innerHTML = `
+    <p style="color:var(--muted);margin-bottom:16px;">${memberTypeBadge(m.type)} &nbsp; ${m.phones.join(' · ')} &nbsp; ${m.address}</p>
+    <p style="font-size:13px;margin-bottom:8px;font-weight:600;">Loan History (${loans.length})</p>
+    ${loans.map(l=>`<div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border)">
+      <span>${bk(l.bookId)?.title||'—'}</span>${statusBadge(loanStatus(l))}
+    </div>`).join('')||'<p style="color:var(--muted);font-size:13px;">No loans</p>'}
+    <p style="font-size:13px;margin:14px 0 8px;font-weight:600;">Fines (${fines.length})</p>
+    ${fines.map(f=>`<div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border)">
+      <span>${bk(f.bookId)?.title||'—'} – Rs.${f.amount}</span>${statusBadge(f.status)}
+    </div>`).join('')||'<p style="color:var(--muted);font-size:13px;">No fines</p>'}
+    <div style="margin-top:20px;display:flex;justify-content:flex-end;">
+      <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+    </div>`;
+  $('modal-overlay').classList.add('open');
+}
+
+// ─── Modal ───────────────────────────────────
+function openModal(type, data={}) {
+  const overlay = $('modal-overlay');
+  const forms = {
+    'add-book': {
+      title: '＋ Add New Book',
+      body: `
+        <div class="form-row"><label class="form-label">Title</label><input class="form-input" id="f-title" placeholder="Book title"/></div>
+        <div class="form-row-2">
+          <div class="form-row"><label class="form-label">Edition</label><input class="form-input" id="f-edition" placeholder="e.g. 3rd"/></div>
+          <div class="form-row"><label class="form-label">ISBN</label><input class="form-input" id="f-isbn" placeholder="978-..."/></div>
+        </div>
+        <div class="form-row"><label class="form-label">Authors (comma separated)</label><input class="form-input" id="f-authors" placeholder="Author 1, Author 2"/></div>
+        <div class="form-row"><label class="form-label">Categories (comma separated)</label><input class="form-input" id="f-cats" placeholder="CS, Programming"/></div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveBook()">Save Book</button>
+        </div>`
+    },
+    'add-member': {
+      title: '＋ Add Member',
+      body: `
+        <div class="form-row"><label class="form-label">Full Name</label><input class="form-input" id="f-name" placeholder="Full name"/></div>
+        <div class="form-row-2">
+          <div class="form-row"><label class="form-label">Type</label>
+            <select class="form-input" id="f-type"><option>Student</option><option>Faculty</option><option>Staff</option><option>Guest</option></select>
+          </div>
+          <div class="form-row"><label class="form-label">Phone</label><input class="form-input" id="f-phone" placeholder="555-0000"/></div>
+        </div>
+        <div class="form-row"><label class="form-label">Address</label><input class="form-input" id="f-addr" placeholder="Street address"/></div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveMember()">Save Member</button>
+        </div>`
+    },
+    'add-loan': {
+      title: '＋ Issue Loan',
+      body: `
+        <div class="form-row"><label class="form-label">Member</label>
+          <select class="form-input" id="f-mid">${DB.members.map(m=>`<option value="${m.id}">${m.name}</option>`).join('')}</select>
+        </div>
+        <div class="form-row"><label class="form-label">Book</label>
+          <select class="form-input" id="f-bid">${DB.books.map(b=>`<option value="${b.id}">${b.title}</option>`).join('')}</select>
+        </div>
+        <div class="form-row-2">
+          <div class="form-row"><label class="form-label">Issue Date</label><input type="date" class="form-input" id="f-issue" value="${new Date().toISOString().slice(0,10)}"/></div>
+          <div class="form-row"><label class="form-label">Due Date</label><input type="date" class="form-input" id="f-due"/></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveLoan()">Issue</button>
+        </div>`
+    },
+    'add-staff': {
+      title: '＋ Add Staff',
+      body: `
+        <div class="form-row"><label class="form-label">Full Name</label><input class="form-input" id="f-sname" placeholder="Full name"/></div>
+        <div class="form-row-2">
+          <div class="form-row"><label class="form-label">Role</label><input class="form-input" id="f-srole" placeholder="Librarian / Assistant..."/></div>
+          <div class="form-row"><label class="form-label">Phone</label><input class="form-input" id="f-sphone" placeholder="555-0000"/></div>
+        </div>
+        <div class="form-row"><label class="form-label">Sections (comma separated)</label><input class="form-input" id="f-ssec" placeholder="Fiction, Science"/></div>
+        <div class="form-row"><label class="form-label">Address</label><input class="form-input" id="f-saddr" placeholder="Street address"/></div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveStaff()">Save</button>
+        </div>`
+    },
+  };
+  if(type==='edit-book' && data.id) {
+    $('modal-title-text').textContent = 'Edit Book';
+    $('modal-body').innerHTML = forms['add-book'].body;
+    overlay.classList.add('open');
+    setTimeout(()=>{
+      $('f-title').value   = data.title;
+      $('f-edition').value = data.edition;
+      $('f-isbn').value    = data.isbn;
+      $('f-authors').value = data.authors.join(', ');
+      $('f-cats').value    = data.categories.join(', ');
+      // Replace save button
+      overlay.querySelector('[onclick="saveBook()"]').setAttribute('onclick', `updateBook(${data.id})`);
+    },10);
+    return;
+  }
+  const form = forms[type];
+  if(!form) return;
+  $('modal-title-text').textContent = form.title;
+  $('modal-body').innerHTML = form.body;
+  overlay.classList.add('open');
+}
+
+function closeModal(e) {
+  if(e && e.target !== $('modal-overlay')) return;
+  $('modal-overlay').classList.remove('open');
+}
+
+// ─── Save Actions ────────────────────────────
+function saveBook() {
+  const t=$('f-title').value.trim(), e=$('f-edition').value.trim(), i=$('f-isbn').value.trim();
+  if(!t||!i) return toast('Title and ISBN are required','error');
+  const id = Math.max(...DB.books.map(b=>b.id)) + 1;
+  DB.books.push({id, title:t, edition:e, isbn:i,
+    authors: $('f-authors').value.split(',').map(s=>s.trim()).filter(Boolean),
+    categories: $('f-cats').value.split(',').map(s=>s.trim()).filter(Boolean)
+  });
+  $('modal-overlay').classList.remove('open');
+  render.books();
+  toast('Book added successfully ✓');
+}
+function updateBook(id) {
+  const b = DB.books.find(x=>x.id===id);
+  b.title = $('f-title').value.trim();
+  b.edition = $('f-edition').value.trim();
+  b.isbn = $('f-isbn').value.trim();
+  b.authors = $('f-authors').value.split(',').map(s=>s.trim()).filter(Boolean);
+  b.categories = $('f-cats').value.split(',').map(s=>s.trim()).filter(Boolean);
+  $('modal-overlay').classList.remove('open');
+  render.books();
+  toast('Book updated ✓');
+}
+function saveMember() {
+  const n=$('f-name').value.trim();
+  if(!n) return toast('Name is required','error');
+  const id = Math.max(...DB.members.map(m=>m.id)) + 1;
+  DB.members.push({id, name:n, type:$('f-type').value, phones:[$('f-phone').value.trim()], address:$('f-addr').value.trim()});
+  $('modal-overlay').classList.remove('open');
+  render.members();
+  toast('Member added ✓');
+}
+function saveLoan() {
+  const mid=Number($('f-mid').value), bid=Number($('f-bid').value), issue=$('f-issue').value, due=$('f-due').value;
+  if(!due) return toast('Due date is required','error');
+  const id = 'L' + String(DB.loans.length+1).padStart(3,'0');
+  DB.loans.push({id, memberId:mid, bookId:bid, issue, due, returned:null});
+  $('modal-overlay').classList.remove('open');
+  render.loans();
+  toast('Loan issued ✓');
+}
+function saveStaff() {
+  const n=$('f-sname').value.trim();
+  if(!n) return toast('Name is required','error');
+  const id = Math.max(...DB.staff.map(s=>s.id)) + 1;
+  DB.staff.push({id, name:n, role:$('f-srole').value.trim(), phones:[$('f-sphone').value.trim()],
+    sections:$('f-ssec').value.split(',').map(s=>s.trim()).filter(Boolean), address:$('f-saddr').value.trim()});
+  $('modal-overlay').classList.remove('open');
+  render.staff();
+  toast('Staff added ✓');
+}
+
+// ─── Search ──────────────────────────────────
+function globalSearch(q) {
+  q = q.toLowerCase();
+  if(!q) { render.books?.(); return; }
+  const filtered = DB.books.filter(b =>
+    b.title.toLowerCase().includes(q) ||
+    b.authors.some(a=>a.toLowerCase().includes(q)) ||
+    b.isbn.includes(q)
+  );
+  $('books-tbody').innerHTML = filtered.map(b=>`
+    <tr>
+      <td class="mono">B${b.id}</td>
+      <td><strong>${b.title}</strong></td>
+      <td>${b.authors.join(', ')}</td>
+      <td>${b.categories.map(c=>`<span class="tag">${c}</span>`).join('')}</td>
+      <td>${b.edition}</td>
+      <td class="mono">${b.isbn}</td>
+      <td>—</td>
+    </tr>`).join('') || '<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:24px;">No results</td></tr>';
+}
+
+// ─── Toast ───────────────────────────────────
+function toast(msg, type='') {
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  $('toasts').appendChild(t);
+  setTimeout(()=>t.remove(), 3200);
+}
+
+// ─── Init ────────────────────────────────────
+render.dashboard();
+</script>
+</body>
+</html>
