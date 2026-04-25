@@ -169,7 +169,7 @@ The schema satisfies **Third Normal Form (3NF)**:
 
 ---
 
-## 👨‍💻 Author
+## Author: Mustabshira Nasir
 
 **COMSATS University Islamabad — Attock Campus**  
 Department of Computer Science  
