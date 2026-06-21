@@ -10,45 +10,45 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:        #0f0e0c;
-  --surface:   #1a1916;
-  --card:      #211f1c;
-  --border:    #2e2c28;
-  --accent:    #c9a84c;
-  --accent2:   #7ec8a0;
-  --accent3:   #e07d54;
-  --text:      #e8e4db;
-  --muted:     #7a776d;
-  --danger:    #e05454;
-  --success:   #4caf7e;
-  --warning:   #c9a84c;
-  --radius:    10px;
-  --font-head: 'DM Serif Display', serif;
-  --font-body: 'DM Sans', sans-serif;
-  --font-mono: 'DM Mono', monospace;
+  --bg: #f8fafc;
+  --surface: rgba(255, 255, 255, 0.9);
+  --card: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --success: #10b981;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-head: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius: 10px;
 }
 
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: var(--font-body);
-  background: var(--bg);
+  background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+  background-attachment: fixed;
   color: var(--text);
+  font-family: var(--font-sans);
   min-height: 100vh;
-  overflow-x: hidden;
+  display: flex;
 }
 
 /* ── Sidebar ── */
 .sidebar {
-  position: fixed;
-  top: 0; left: 0;
-  width: 240px;
-  height: 100vh;
+  width: 260px;
   background: var(--surface);
+  backdrop-filter: blur(10px);
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  padding: 28px 0;
+  position: fixed;
+  height: 100vh;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.02);
   z-index: 100;
   transition: transform .3s ease;
 }
@@ -103,7 +103,7 @@ nav { flex: 1; padding: 20px 12px; overflow-y: auto; }
   text-align: left;
 }
 .nav-item:hover { color: var(--text); background: var(--card); }
-.nav-item.active { color: var(--accent); background: rgba(201,168,76,.1); }
+.nav-item.active { color: var(--accent); background: rgba(59,130,246,.1); }
 .nav-item .icon { font-size: 16px; width: 20px; flex-shrink: 0; }
 .nav-item .badge {
   margin-left: auto;
@@ -126,28 +126,30 @@ nav { flex: 1; padding: 20px 12px; overflow-y: auto; }
 
 /* ── Main ── */
 .main {
-  margin-left: 240px;
-  min-height: 100vh;
-  padding: 32px 36px;
+  flex: 1;
+  margin-left: 260px;
+  padding: 32px 40px;
+  max-width: 1200px;
 }
 
 /* ── Topbar ── */
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.header-wrap {
   margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
 }
 .page-title {
   font-family: var(--font-head);
-  font-size: 28px;
-  font-style: italic;
-  color: var(--text);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+  color: #0f172a;
 }
 .page-subtitle {
-  font-size: 13px;
   color: var(--muted);
-  margin-top: 2px;
+  font-size: 15px;
 }
 
 .search-bar {
@@ -165,7 +167,7 @@ nav { flex: 1; padding: 20px 12px; overflow-y: auto; }
   border: none;
   outline: none;
   color: var(--text);
-  font-family: var(--font-body);
+  font-family: var(--font-sans);
   font-size: 13px;
   width: 220px;
 }
@@ -178,18 +180,22 @@ nav { flex: 1; padding: 20px 12px; overflow-y: auto; }
 /* ── Stat Cards ── */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 16px;
-  margin-bottom: 28px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
 }
 .stat-card {
   background: var(--card);
+  padding: 24px;
+  border-radius: 12px;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-  transition: transform .18s, border-color .18s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
-.stat-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px rgba(0,0,0,0.05);
+}
 .stat-label { font-size: 11px; color: var(--muted); letter-spacing: .05em; text-transform: uppercase; margin-bottom: 8px; }
 .stat-value { font-family: var(--font-mono); font-size: 32px; font-weight: 500; color: var(--accent); }
 .stat-meta { font-size: 11px; color: var(--muted); margin-top: 4px; }
@@ -197,8 +203,9 @@ nav { flex: 1; padding: 20px 12px; overflow-y: auto; }
 /* ── Table ── */
 .table-card {
   background: var(--card);
+  border-radius: 12px;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
   overflow: hidden;
   margin-bottom: 24px;
 }
@@ -369,32 +376,16 @@ td.mono { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
 .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
 
 /* ── Notification toast ── */
-.toast-wrap {
-  position: fixed;
-  bottom: 28px;
-  right: 28px;
-  z-index: 999;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.toast {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--success);
-  border-radius: 8px;
-  padding: 12px 18px;
-  font-size: 13px;
-  max-width: 300px;
-  animation: slideIn .25s ease;
-}
-.toast.error { border-left-color: var(--danger); }
-.toast.warn  { border-left-color: var(--warning); }
+.toast-wrap { position:fixed; bottom:24px; right:24px; z-index:9999; display:flex; flex-direction:column; gap:10px; }
+.toast { background:var(--surface); color:var(--text); padding:14px 20px; border-radius:8px; box-shadow:0 10px 25px rgba(0,0,0,0.1); border-left:4px solid var(--accent); font-weight:500; font-size:14px; animation:slide-in 0.3s cubic-bezier(0.175,0.885,0.32,1.275); }
+.toast.error { border-left-color:var(--danger); }
+.toast.warn { border-left-color:var(--warning); }
+.toast.success { border-left-color:var(--success); }
+@keyframes slide-in { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
 
-@keyframes slideIn {
-  from { transform: translateX(120%); opacity: 0; }
-  to   { transform: translateX(0);   opacity: 1; }
-}
+/* Book Cover Image */
+.book-cover { width: 40px; height: 60px; object-fit: cover; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); background: #eee; }
+.book-row { display: flex; align-items: center; gap: 12px; }
 
 /* ── Chart bars ── */
 .mini-chart { display: flex; align-items: flex-end; gap: 4px; height: 60px; }
@@ -429,11 +420,26 @@ td.mono { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
   .main { margin-left: 0; padding: 20px 16px; }
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<!-- ─── SIDEBAR ─────────────────────────────────── -->
-<aside class="sidebar">
+<!-- ─── AUTH OVERLAY ──────────────────────────── -->
+<div class="overlay open" id="login-overlay" style="background:var(--bg); z-index:9999; display:flex; flex-direction:column;">
+  <div style="margin-bottom:30px;text-align:center;">
+    <div class="logo-icon" style="font-size:48px;">📚</div>
+    <h1 style="font-family:var(--font-head);color:var(--accent);font-size:28px;">Library Access</h1>
+    <p style="color:var(--muted);margin-top:8px;">Sign in to continue</p>
+  </div>
+  <div class="modal" style="width:360px;transform:none;">
+    <div class="form-row"><label class="form-label">Email</label><input class="form-input" id="auth-email" type="email" placeholder="name@example.com"/></div>
+    <div class="form-row"><label class="form-label">Password</label><input class="form-input" type="password" id="auth-pass" placeholder="••••••••"/></div>
+    <div style="margin-top:20px;display:flex;gap:10px;">
+      <button class="btn btn-secondary" style="flex:1;justify-content:center;" onclick="handleSignup()">Sign Up</button>
+      <button class="btn btn-primary" style="flex:1;justify-content:center;" onclick="handleLogin()">Sign In</button>
+    </div>
+  </div>
+</div><aside class="sidebar">
   <div class="logo">
     <div class="logo-icon">📚</div>
     <h1>Library<br>Management</h1>
@@ -716,74 +722,25 @@ td.mono { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
 // ═══════════════════════════════════════════════
 //  DATA STORE (mirrors SQL tables)
 // ═══════════════════════════════════════════════
+const API = 'https://iomkshyzmfkefrwvzxaw.supabase.co/rest/v1';
+const SUPA_KEY = 'sb_publishable_8zUBW2q4IN3aL22R9JIvrQ_ZVDqknRC';
+
+const supabaseClient = supabase.createClient('https://iomkshyzmfkefrwvzxaw.supabase.co', SUPA_KEY);
+
 const DB = {
-  books: [
-    {id:101, title:'Data Structures',         edition:'3rd', isbn:'978-123456789', authors:['Ellis Horowitz','Sartaj Sahni'],         categories:['Programming','Computer Science']},
-    {id:102, title:'Database Systems',        edition:'7th', isbn:'978-987654321', authors:['C.J. Date','A. Kannan'],                 categories:['DBMS','Computer Science']},
-    {id:103, title:'Algorithms',              edition:'5th', isbn:'978-135794680', authors:['Thomas H. Cormen','Charles E. Leiserson'],categories:['Algorithms','Computer Science']},
-    {id:104, title:'Operating Systems',       edition:'4th', isbn:'978-246813579', authors:['Abraham Silberschatz'],                  categories:['Systems','Computer Science']},
-    {id:105, title:'Computer Networks',       edition:'6th', isbn:'978-369258147', authors:['Andrew Tanenbaum'],                      categories:['Networking','Computer Science']},
-    {id:106, title:'Artificial Intelligence', edition:'2nd', isbn:'978-112233445', authors:['Stuart Russell','Peter Norvig'],          categories:['AI','Computer Science']},
-    {id:107, title:'Software Engineering',    edition:'9th', isbn:'978-998877665', authors:['Ian Sommerville'],                       categories:['Engineering','Software']},
-    {id:108, title:'Discrete Mathematics',    edition:'1st', isbn:'978-334455667', authors:['Kenneth H. Rosen'],                      categories:['Mathematics','Discrete Math']},
-    {id:109, title:'Linear Algebra',          edition:'3rd', isbn:'978-556677889', authors:['Gilbert Strang'],                        categories:['Mathematics','Algebra']},
-    {id:110, title:'Calculus',                edition:'8th', isbn:'978-778899001', authors:['James Stewart'],                         categories:['Mathematics','Calculus']},
-  ],
-  members: [
-    {id:1, name:'John Doe',       type:'Student', phones:['555-1234','555-5678'], address:'123 Elm Street'},
-    {id:2, name:'Jane Smith',     type:'Faculty', phones:['555-9876'],            address:'456 Maple Avenue'},
-    {id:3, name:'Ali Hassan',     type:'Student', phones:['555-1111'],            address:'789 Oak Lane'},
-    {id:4, name:'Sara Ahmed',     type:'Student', phones:['555-2222'],            address:'12 Pine Road'},
-    {id:5, name:'Dr. Malik',      type:'Faculty', phones:['555-3333','555-4444'], address:'34 Cedar Blvd'},
-    {id:6, name:'Usman Tariq',    type:'Staff',   phones:['555-5555'],            address:'56 Walnut Drive'},
-    {id:7, name:'Ayesha Khan',    type:'Student', phones:['555-6666'],            address:'78 Birch Court'},
-    {id:8, name:'Bilal Chaudhry', type:'Student', phones:['555-7777'],            address:'90 Spruce Terrace'},
-  ],
-  staff: [
-    {id:1, name:'Alice Johnson', role:'Librarian', phones:['555-2345'],           sections:['Fiction','Science'],        address:'12 Green Lane'},
-    {id:2, name:'Bob Brown',     role:'Assistant', phones:['555-3456','555-6789'],sections:['Technology','Reference'],   address:'34 Blue Street'},
-    {id:3, name:'Carol White',   role:'Cataloger', phones:['555-9012'],           sections:['Cataloging','Archives'],    address:'56 Red Avenue'},
-    {id:4, name:'David Lee',     role:'Security',  phones:['555-3210'],           sections:['Entrance','Main Hall'],     address:'78 Yellow Road'},
-  ],
-  inventory: [
-    {id:1, bookId:101, title:'Data Structures',         shelf:'A-1-10', stock:5, total:10},
-    {id:2, bookId:102, title:'Database Systems',        shelf:'B-2-20', stock:3, total:8},
-    {id:3, bookId:103, title:'Algorithms',              shelf:'A-2-05', stock:6, total:12},
-    {id:4, bookId:104, title:'Operating Systems',       shelf:'C-1-15', stock:4, total:7},
-    {id:5, bookId:105, title:'Computer Networks',       shelf:'C-2-10', stock:2, total:5},
-    {id:6, bookId:106, title:'AI',                      shelf:'D-1-08', stock:7, total:10},
-    {id:7, bookId:107, title:'Software Engineering',    shelf:'D-2-12', stock:3, total:6},
-    {id:8, bookId:108, title:'Discrete Mathematics',    shelf:'E-1-03', stock:8, total:15},
-    {id:9, bookId:109, title:'Linear Algebra',          shelf:'E-2-07', stock:5, total:9},
-    {id:10,bookId:110, title:'Calculus',                shelf:'F-1-20', stock:4, total:11},
-  ],
-  loans: [
-    {id:'L001', memberId:1, bookId:101, issue:'2024-12-01', due:'2024-12-15', returned:null},
-    {id:'L002', memberId:1, bookId:102, issue:'2024-12-03', due:'2024-12-17', returned:null},
-    {id:'L003', memberId:2, bookId:103, issue:'2024-12-05', due:'2024-12-20', returned:null},
-    {id:'L004', memberId:3, bookId:104, issue:'2024-12-02', due:'2024-12-16', returned:'2024-12-14'},
-    {id:'L005', memberId:4, bookId:105, issue:'2024-12-10', due:'2024-12-24', returned:null},
-    {id:'L006', memberId:5, bookId:106, issue:'2024-11-25', due:'2024-12-09', returned:'2024-12-08'},
-    {id:'L007', memberId:7, bookId:108, issue:'2024-12-07', due:'2024-12-21', returned:null},
-    {id:'L008', memberId:8, bookId:109, issue:'2024-12-08', due:'2024-12-22', returned:null},
-  ],
-  fines: [
-    {id:'F001', memberId:1, bookId:101, days:5,  amount:10.00, status:'Unpaid'},
-    {id:'F002', memberId:1, bookId:102, days:3,  amount:10.00, status:'Unpaid'},
-    {id:'F003', memberId:2, bookId:103, days:7,  amount:7.00,  status:'Paid'},
-    {id:'F004', memberId:4, bookId:105, days:2,  amount:4.00,  status:'Unpaid'},
-    {id:'F005', memberId:8, bookId:109, days:4,  amount:8.00,  status:'Unpaid'},
-  ],
-  requests: [
-    {id:'R001', memberId:1, bookId:106, date:'2024-12-05', status:'Pending'},
-    {id:'R002', memberId:1, bookId:107, date:'2024-12-05', status:'Pending'},
-    {id:'R003', memberId:2, bookId:110, date:'2024-12-06', status:'Approved'},
-    {id:'R004', memberId:3, bookId:108, date:'2024-12-07', status:'Fulfilled'},
-    {id:'R005', memberId:4, bookId:109, date:'2024-12-08', status:'Pending'},
-    {id:'R006', memberId:7, bookId:103, date:'2024-12-09', status:'Approved'},
-    {id:'R007', memberId:8, bookId:101, date:'2024-12-10', status:'Pending'},
-  ],
+  books: [], members: [], loans: [], fines: [], requests: [], inventory: [], staff: []
 };
+
+// Realtime subscriptions
+supabaseClient.channel('public-db')
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'books' }, () => render.books(1, ''))
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'members' }, () => render.members())
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'loans' }, () => { render.loans(1, ''); render.dashboard(); })
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'fines' }, () => { render.fines(); render.dashboard(); })
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'requests' }, () => { render.requests(); render.dashboard(); })
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'inventory' }, () => render.inventory())
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'staff' }, () => render.staff())
+  .subscribe();
 
 // ─── Helpers ──────────────────────────────────
 const $  = id => document.getElementById(id);
@@ -821,17 +778,148 @@ function goTo(page, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   $('sec-' + page).classList.add('active');
-  btn.classList.add('active');
+  if(btn) btn.classList.add('active');
   const [t, s] = pageMeta[page];
   $('page-title').textContent = t;
   $('page-subtitle').textContent = s;
-  render[page]?.();
+  if(render[page]) render[page]();
+}
+
+// ─── Fetch API ───────────────────────────────
+async function fetchAPI(endpoint, options = {}) {
+  try {
+    const headers = { 
+      'Content-Type': 'application/json',
+      'apikey': SUPA_KEY,
+      'Prefer': 'count=exact'
+    };
+    if (currentUser?.token) {
+      headers['Authorization'] = `Bearer ${currentUser.token}`;
+    } else {
+      headers['Authorization'] = `Bearer ${SUPA_KEY}`;
+    }
+
+    const res = await fetch(`${API}/${endpoint}`, { headers, ...options });
+    
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    
+    let total = 0;
+    const cr = res.headers.get('content-range');
+    if (cr) total = parseInt(cr.split('/')[1]);
+
+    const text = await res.text();
+    const data = text ? JSON.parse(text) : null;
+    return { data, total, meta: { totalPages: Math.ceil(total / 10) } };
+  } catch (err) {
+    console.error(err);
+    toast(`Failed to connect to ${endpoint}`, 'error');
+    return null;
+  }
+}
+
+// Mappers from API to Frontend schema
+const mapBook = b => ({ id: b.book_id, title: b.title, edition: b.edition||'', isbn: b.isbn, authors: [], categories: [] });
+const mapMember = m => ({ id: m.member_id, name: m.name, type: m.membership_type, phones: [], address: '—' });
+const mapLoan = l => ({ id: l.loan_id, memberId: l.member_id, bookId: l.issued_book_id, issue: String(l.issue_date).slice(0,10), due: String(l.due_date).slice(0,10), returned: l.return_date ? String(l.return_date).slice(0,10) : null });
+const mapFine = f => ({ id: f.fine_id, memberId: f.member_id, bookId: f.overdue_book_id, days: f.overdue_days, amount: Number(f.fine_amount), status: f.payment_status });
+const mapReq = r => ({ id: r.request_id, memberId: r.member_id, bookId: r.requested_book_id, date: String(r.request_date).slice(0,10), status: r.request_status });
+
+// ─── Auth ──────────────────────────────────────
+let currentUser = null;
+
+supabaseClient.auth.onAuthStateChange(async (event, session) => {
+  if (event === 'SIGNED_IN' && session) {
+    // Fetch profile role
+    const { data: profile } = await supabaseClient.from('profiles').select('role').eq('id', session.user.id).single();
+    currentUser = {
+      id: session.user.id,
+      email: session.user.email,
+      role: profile?.role || 'member',
+      token: session.access_token
+    };
+    $('login-overlay').classList.remove('open');
+    applyRoleGating();
+    render.dashboard();
+  } else if (event === 'SIGNED_OUT') {
+    currentUser = null;
+    $('login-overlay').classList.add('open');
+  }
+});
+
+async function handleLogin() {
+  const email = $('auth-email').value;
+  const password = $('auth-pass').value;
+  if(!email || !password) return toast('Please enter email and password', 'error');
+  
+  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  if (error) toast(error.message, 'error');
+}
+
+async function handleSignup() {
+  const email = $('auth-email').value;
+  const password = $('auth-pass').value;
+  if(!email || !password) return toast('Please enter email and password', 'error');
+  
+  const { error } = await supabaseClient.auth.signUp({ email, password });
+  if (error) toast(error.message, 'error');
+  else toast('Signup successful! You can now sign in.', 'success');
+}
+
+async function logout() {
+  await supabaseClient.auth.signOut();
+}
+
+function applyRoleGating() {
+  if(!currentUser) return;
+  const isMember = currentUser.role === 'member';
+  
+  const hideIfMember = (sel) => document.querySelectorAll(sel).forEach(el => el.style.display = isMember ? 'none' : '');
+  hideIfMember('button[onclick*="inventory"]');
+  hideIfMember('button[onclick*="members"]');
+  hideIfMember('button[onclick*="staff"]');
+  hideIfMember('button[onclick*="fines"]'); // Maybe members can see their own fines? We'll let them see fines, wait, if we hide the nav button they can't. Let's hide staff and inventory.
+  
+  // Re-enable dashboard
+  goTo('dashboard', document.querySelector('button[onclick*="dashboard"]'));
+}
+// Preload lookups for dashboard & relations
+async function preloadLookup() {
+  const [b, m] = await Promise.all([fetchAPI('books?select=*&limit=1000'), fetchAPI('members?select=*&limit=1000')]);
+  if(b && b.data) DB.books = b.data.map(mapBook);
+  if(m && m.data) DB.members = m.data.map(mapMember);
+}
+
+function showLoading(tbodyId, cols) {
+  $(tbodyId).innerHTML = `<tr><td colspan="${cols}" style="text-align:center;padding:24px;color:var(--muted);">Loading...</td></tr>`;
+}
+function showError(tbodyId, cols) {
+  $(tbodyId).innerHTML = `<tr><td colspan="${cols}" style="text-align:center;padding:24px;color:var(--danger);">Failed to load data.</td></tr>`;
 }
 
 // ─── Renderers ───────────────────────────────
 const render = {};
 
-render.dashboard = () => {
+render.dashboard = async () => {
+  $('stats-grid').innerHTML = '<div style="color:var(--muted)">Loading stats...</div>';
+  showLoading('dash-loans', 4);
+  showLoading('dash-requests', 3);
+
+  await preloadLookup();
+  const [loansRes, finesRes, requestsRes] = await Promise.all([
+    fetchAPI('loans?select=*&limit=1000'), fetchAPI('fines?select=*&limit=1000'), fetchAPI('requests?select=*&limit=1000')
+  ]);
+
+  if(!loansRes || !finesRes || !requestsRes) {
+    $('stats-grid').innerHTML = '<div style="color:var(--danger)">Failed to load stats.</div>';
+    showError('dash-loans', 4);
+    showError('dash-requests', 3);
+    return;
+  }
+
+  DB.loans = loansRes.data.map(mapLoan);
+  DB.fines = finesRes.data.map(mapFine);
+  DB.requests = requestsRes.data.map(mapReq);
+
   const activeLoans   = DB.loans.filter(l => !l.returned).length;
   const unpaidFines   = DB.fines.filter(f => f.status==='Unpaid').length;
   const pendingReqs   = DB.requests.filter(r => r.status==='Pending').length;
@@ -857,21 +945,21 @@ render.dashboard = () => {
       <td>${bk(l.bookId)?.title||'—'}</td>
       <td class="mono">${l.due}</td>
       <td>${statusBadge(loanStatus(l))}</td>
-    </tr>`).join('');
+    </tr>`).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--muted)">No records found</td></tr>';
 
   $('dash-requests').innerHTML = DB.requests.filter(r=>r.status==='Pending').map(r=>`
     <tr>
       <td>${mem(r.memberId)?.name||'—'}</td>
       <td>${bk(r.bookId)?.title||'—'}</td>
       <td class="mono">${r.date}</td>
-    </tr>`).join('');
+    </tr>`).join('') || '<tr><td colspan="3" style="text-align:center;color:var(--muted)">No pending requests</td></tr>';
 
   // bar chart
   const counts = {};
   DB.loans.forEach(l => { counts[l.bookId] = (counts[l.bookId]||0)+1; });
   const top = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,6);
-  const max = Math.max(...top.map(x=>x[1]));
-  $('top-books-chart').innerHTML = `
+  const max = Math.max(...top.map(x=>x[1]), 1);
+  $('top-books-chart').innerHTML = top.length ? `
     <div style="display:flex;gap:16px;align-items:flex-end;">
       ${top.map(([id,cnt])=>{
         const title = bk(Number(id))?.title||'#'+id;
@@ -882,36 +970,65 @@ render.dashboard = () => {
           <div style="font-size:10px;color:var(--muted);text-align:center;max-width:60px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" title="${title}">${title.split(' ')[0]}</div>
         </div>`;
       }).join('')}
-    </div>`;
+    </div>` : '<div style="color:var(--muted);text-align:center;">No data available</div>';
 };
 
-render.books = () => {
-  $('books-count').textContent = DB.books.length + ' titles';
+render.books = async (page = 1, search = '') => {
+  $('books-count').textContent = 'Loading...';
+  showLoading('books-tbody', 7);
+  const offset = (page-1)*10;
+  let endpoint = `books?select=*&limit=10&offset=${offset}`;
+  if (search) endpoint += `&or=(title.ilike.*${search}*,isbn.ilike.*${search}*)`;
+  
+  const data = await fetchAPI(endpoint);
+  if(!data) return showError('books-tbody', 7);
+  
+  DB.books = data.data.map(mapBook);
+  $('books-count').textContent = data.total + ' titles';
+  
   $('books-tbody').innerHTML = DB.books.map(b=>`
     <tr>
       <td class="mono">B${b.id}</td>
-      <td><strong>${b.title}</strong></td>
-      <td>${b.authors.join(', ')}</td>
-      <td>${b.categories.map(c=>`<span class="tag">${c}</span>`).join('')}</td>
+      <td>
+        <div class="book-row">
+          <img class="book-cover" src="https://covers.openlibrary.org/b/isbn/${b.isbn}-M.jpg" onerror="this.src='https://via.placeholder.com/40x60?text=No+Cover'" />
+          <strong>${b.title}</strong>
+        </div>
+      </td>
+      <td>${b.authors.join(', ') || '—'}</td>
+      <td>${b.categories.map(c=>`<span class="tag">${c}</span>`).join('') || '—'}</td>
       <td>${b.edition}</td>
       <td class="mono">${b.isbn}</td>
       <td>
         <button class="btn btn-ghost" style="padding:5px 10px;font-size:12px;" onclick="editBook(${b.id})">Edit</button>
         <button class="btn btn-danger" style="padding:5px 10px;font-size:12px;" onclick="deleteBook(${b.id})">Del</button>
       </td>
-    </tr>`).join('');
+    </tr>`).join('') || '<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:24px;">No results</td></tr>';
+
+  if (data.meta.totalPages > 1) {
+    $('books-tbody').innerHTML += `<tr><td colspan="7" style="text-align:center;padding:16px;">
+      <button class="btn btn-secondary" onclick="render.books(${page-1}, '${search}')" ${page===1?'disabled':''}>Prev</button>
+      <span style="margin:0 15px;font-size:12px;">Page ${page} of ${data.meta.totalPages}</span>
+      <button class="btn btn-secondary" onclick="render.books(${page+1}, '${search}')" ${page===data.meta.totalPages?'disabled':''}>Next</button>
+    </td></tr>`;
+  }
 };
 
-render.inventory = () => {
+render.inventory = async () => {
+  $('inv-tbody').innerHTML = '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--muted);">Loading...</td></tr>';
+  const data = await fetchAPI('inventory?select=*&limit=1000');
+  if(!data) return showError('inv-tbody', 5);
+  DB.inventory = data.data;
+
   $('inv-tbody').innerHTML = DB.inventory.map(i=>{
-    const pct = Math.round((i.stock/i.total)*100);
+    const pct = Math.round((i.stock_count/Math.max(i.total_count,1))*100);
     const col = pct>60?'var(--success)':pct>30?'var(--warning)':'var(--danger)';
     return `<tr>
-      <td class="mono">INV${String(i.id).padStart(3,'0')}</td>
+      <td class="mono">INV${String(i.inventory_id).padStart(3,'0')}</td>
       <td>${i.title}</td>
-      <td class="mono">${i.shelf}</td>
-      <td><strong>${i.stock}</strong></td>
-      <td>${i.total}</td>
+      <td class="mono">${i.shelf_location || '—'}</td>
+      <td><strong>${i.stock_count}</strong></td>
+      <td>${i.total_count}</td>
       <td>
         <div class="stock-bar-wrap">
           <div class="stock-bar">
@@ -921,10 +1038,17 @@ render.inventory = () => {
         </div>
       </td>
     </tr>`;
-  }).join('');
+  }).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--muted);">No inventory records</td></tr>';
 };
 
-render.members = () => {
+render.members = async () => {
+  $('members-count').textContent = 'Loading...';
+  showLoading('members-tbody', 7);
+  await preloadLookup();
+  const data = await fetchAPI('members?select=*&limit=1000');
+  if(!data) return showError('members-tbody', 7);
+  
+  DB.members = data.data.map(mapMember);
   $('members-count').textContent = DB.members.length + ' registered';
   const activeLoansFor = id => DB.loans.filter(l=>l.memberId===id && !l.returned).length;
   $('members-tbody').innerHTML = DB.members.map(m=>`
@@ -932,7 +1056,7 @@ render.members = () => {
       <td class="mono">M${String(m.id).padStart(3,'0')}</td>
       <td><strong>${m.name}</strong></td>
       <td>${memberTypeBadge(m.type)}</td>
-      <td class="mono">${m.phones.join(', ')}</td>
+      <td class="mono">${m.phones.join(', ') || '—'}</td>
       <td>${m.address}</td>
       <td><span style="font-family:var(--font-mono);font-weight:600;color:${activeLoansFor(m.id)?'var(--accent)':'var(--muted)'};">${activeLoansFor(m.id)}</span></td>
       <td>
@@ -941,21 +1065,38 @@ render.members = () => {
     </tr>`).join('');
 };
 
-render.staff = () => {
+render.staff = async () => {
+  $('staff-tbody').innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted);">Loading...</td></tr>';
+  const data = await fetchAPI('staff?select=*&limit=1000');
+  if(!data) return showError('staff-tbody', 6);
+  DB.staff = data.data;
+
   $('staff-count').textContent = DB.staff.length + ' staff members';
   $('staff-tbody').innerHTML = DB.staff.map(s=>`
     <tr>
-      <td class="mono">S${String(s.id).padStart(3,'0')}</td>
+      <td class="mono">S${String(s.staff_id).padStart(3,'0')}</td>
       <td><strong>${s.name}</strong></td>
       <td><span class="badge badge-yellow">${s.role}</span></td>
-      <td class="mono">${s.phones.join(', ')}</td>
-      <td>${s.sections.map(x=>`<span class="tag">${x}</span>`).join('')}</td>
-      <td>${s.address}</td>
-    </tr>`).join('');
+      <td class="mono">Not available</td>
+      <td>Not available</td>
+      <td>Not available</td>
+    </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--muted);">No staff records</td></tr>';
 };
 
-render.loans = () => {
-  $('loans-count').textContent = DB.loans.length + ' total records';
+render.loans = async (page = 1, search = '') => {
+  $('loans-count').textContent = 'Loading...';
+  showLoading('loans-tbody', 8);
+  await preloadLookup();
+  const offset = (page-1)*10;
+  let endpoint = `loans?select=*&limit=10&offset=${offset}`;
+  if(search && !isNaN(search)) endpoint += `&or=(loan_id.eq.${search},member_id.eq.${search})`;
+
+  const data = await fetchAPI(endpoint);
+  if(!data) return showError('loans-tbody', 8);
+
+  DB.loans = data.data.map(mapLoan);
+  $('loans-count').textContent = data.total + ' total records';
+  
   $('loans-tbody').innerHTML = DB.loans.map(l=>{
     const st = loanStatus(l);
     return `<tr>
@@ -966,13 +1107,28 @@ render.loans = () => {
       <td class="mono">${l.due}</td>
       <td class="mono">${l.returned||'—'}</td>
       <td>${statusBadge(st)}</td>
-      <td>${!l.returned?`<button class="btn btn-success" style="padding:5px 10px;font-size:12px;" onclick="returnBook('${l.id}')">Return</button>`:'—'}</td>
+      <td>${!l.returned ? `<button class="btn btn-success" style="padding:5px 10px;font-size:12px;" onclick="returnBook('${l.id}')">Return</button>`:'—'}</td>
     </tr>`;
-  }).join('');
+  }).join('') || '<tr><td colspan="8" style="text-align:center;color:var(--muted)">No records found</td></tr>';
   $('loan-badge').textContent = DB.loans.filter(l=>!l.returned).length;
+
+  if (data.meta.totalPages > 1) {
+    $('loans-tbody').innerHTML += `<tr><td colspan="8" style="text-align:center;padding:16px;">
+      <button class="btn btn-secondary" onclick="render.loans(${page-1}, '${search}')" ${page===1?'disabled':''}>Prev</button>
+      <span style="margin:0 15px;font-size:12px;">Page ${page} of ${data.meta.totalPages}</span>
+      <button class="btn btn-secondary" onclick="render.loans(${page+1}, '${search}')" ${page===data.meta.totalPages?'disabled':''}>Next</button>
+    </td></tr>`;
+  }
 };
 
-render.fines = () => {
+render.fines = async () => {
+  $('fines-count').textContent = 'Loading...';
+  showLoading('fines-tbody', 7);
+  await preloadLookup();
+  const data = await fetchAPI('fines?select=*&limit=1000');
+  if(!data) return showError('fines-tbody', 7);
+
+  DB.fines = data.data.map(mapFine);
   $('fines-count').textContent = DB.fines.length + ' fine records';
   $('fines-tbody').innerHTML = DB.fines.map(f=>`
     <tr>
@@ -983,11 +1139,18 @@ render.fines = () => {
       <td class="mono">Rs. ${f.amount.toFixed(2)}</td>
       <td>${statusBadge(f.status)}</td>
       <td>${f.status==='Unpaid'?`<button class="btn btn-success" style="padding:5px 10px;font-size:12px;" onclick="payFine('${f.id}')">Mark Paid</button>`:'—'}</td>
-    </tr>`).join('');
+    </tr>`).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--muted)">No records found</td></tr>';
   $('fine-badge').textContent = DB.fines.filter(f=>f.status==='Unpaid').length;
 };
 
-render.requests = () => {
+render.requests = async () => {
+  $('req-count').textContent = 'Loading...';
+  showLoading('req-tbody', 6);
+  await preloadLookup();
+  const data = await fetchAPI('requests');
+  if(!data) return showError('req-tbody', 6);
+
+  DB.requests = data.map(mapReq);
   $('req-count').textContent = DB.requests.length + ' requests';
   $('req-tbody').innerHTML = DB.requests.map(r=>`
     <tr>
@@ -1002,27 +1165,49 @@ render.requests = () => {
           <button class="btn btn-danger"   style="padding:5px 10px;font-size:12px;" onclick="updateReq('${r.id}','Rejected')">Reject</button>
         `:'—'}
       </td>
-    </tr>`).join('');
+    </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--muted)">No records found</td></tr>';
   $('req-badge').textContent = DB.requests.filter(r=>r.status==='Pending').length;
 };
 
 // ─── Actions ─────────────────────────────────
-function returnBook(id) {
+async function returnBook(id) {
   const l = DB.loans.find(x=>x.id===id);
-  if(l) { l.returned = new Date().toISOString().slice(0,10); render.loans(); toast('Book marked as returned ✓'); }
+  if(l) {
+    const today = new Date().toISOString().slice(0,10);
+    const res = await fetchAPI('loans/'+id, { method: 'PUT', body: JSON.stringify({ Return_Date: today }) });
+    if(res) {
+      toast('Book marked as returned ✓');
+      render.loans();
+    }
+  }
 }
-function payFine(id) {
+async function payFine(id) {
   const f = DB.fines.find(x=>x.id===id);
-  if(f) { f.status='Paid'; render.fines(); toast('Fine marked as paid ✓'); }
+  if(f) {
+    const res = await fetchAPI('fines/'+id, { method: 'PUT', body: JSON.stringify({ Payment_Status: 'Paid' }) });
+    if(res) {
+      toast('Fine marked as paid ✓');
+      render.fines();
+    }
+  }
 }
-function updateReq(id, status) {
+async function updateReq(id, status) {
   const r = DB.requests.find(x=>x.id===id);
-  if(r) { r.status=status; render.requests(); toast(`Request ${status.toLowerCase()} ✓`); }
+  if(r) {
+    const res = await fetchAPI('requests?request_id=eq.'+id, { method: 'PATCH', body: JSON.stringify({ request_status: status }) });
+    if(res) {
+      toast(`Request ${status.toLowerCase()} ✓`);
+      render.dashboard(); // Since we don't have render.requests, it affects dashboard
+    }
+  }
 }
-function deleteBook(id) {
+async function deleteBook(id) {
   if(confirm('Delete this book?')) {
-    const i = DB.books.findIndex(b=>b.id===id);
-    if(i>-1) { DB.books.splice(i,1); render.books(); toast('Book deleted','error'); }
+    const res = await fetchAPI('books?book_id=eq.'+id, { method: 'DELETE' });
+    if(res) {
+      toast('Book deleted','error');
+      render.books();
+    }
   }
 }
 function editBook(id) {
@@ -1062,11 +1247,9 @@ function openModal(type, data={}) {
           <div class="form-row"><label class="form-label">Edition</label><input class="form-input" id="f-edition" placeholder="e.g. 3rd"/></div>
           <div class="form-row"><label class="form-label">ISBN</label><input class="form-input" id="f-isbn" placeholder="978-..."/></div>
         </div>
-        <div class="form-row"><label class="form-label">Authors (comma separated)</label><input class="form-input" id="f-authors" placeholder="Author 1, Author 2"/></div>
-        <div class="form-row"><label class="form-label">Categories (comma separated)</label><input class="form-input" id="f-cats" placeholder="CS, Programming"/></div>
         <div class="modal-footer">
           <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-          <button class="btn btn-primary" onclick="saveBook()">Save Book</button>
+          <button class="btn btn-primary" onclick="saveBook()" id="btn-save-book">Save Book</button>
         </div>`
     },
     'add-member': {
@@ -1077,12 +1260,10 @@ function openModal(type, data={}) {
           <div class="form-row"><label class="form-label">Type</label>
             <select class="form-input" id="f-type"><option>Student</option><option>Faculty</option><option>Staff</option><option>Guest</option></select>
           </div>
-          <div class="form-row"><label class="form-label">Phone</label><input class="form-input" id="f-phone" placeholder="555-0000"/></div>
         </div>
-        <div class="form-row"><label class="form-label">Address</label><input class="form-input" id="f-addr" placeholder="Street address"/></div>
         <div class="modal-footer">
           <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-          <button class="btn btn-primary" onclick="saveMember()">Save Member</button>
+          <button class="btn btn-primary" onclick="saveMember()" id="btn-save-member">Save Member</button>
         </div>`
     },
     'add-loan': {
@@ -1100,24 +1281,9 @@ function openModal(type, data={}) {
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-          <button class="btn btn-primary" onclick="saveLoan()">Issue</button>
+          <button class="btn btn-primary" onclick="saveLoan()" id="btn-save-loan">Issue</button>
         </div>`
-    },
-    'add-staff': {
-      title: '＋ Add Staff',
-      body: `
-        <div class="form-row"><label class="form-label">Full Name</label><input class="form-input" id="f-sname" placeholder="Full name"/></div>
-        <div class="form-row-2">
-          <div class="form-row"><label class="form-label">Role</label><input class="form-input" id="f-srole" placeholder="Librarian / Assistant..."/></div>
-          <div class="form-row"><label class="form-label">Phone</label><input class="form-input" id="f-sphone" placeholder="555-0000"/></div>
-        </div>
-        <div class="form-row"><label class="form-label">Sections (comma separated)</label><input class="form-input" id="f-ssec" placeholder="Fiction, Science"/></div>
-        <div class="form-row"><label class="form-label">Address</label><input class="form-input" id="f-saddr" placeholder="Street address"/></div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-          <button class="btn btn-primary" onclick="saveStaff()">Save</button>
-        </div>`
-    },
+    }
   };
   if(type==='edit-book' && data.id) {
     $('modal-title-text').textContent = 'Edit Book';
@@ -1127,10 +1293,8 @@ function openModal(type, data={}) {
       $('f-title').value   = data.title;
       $('f-edition').value = data.edition;
       $('f-isbn').value    = data.isbn;
-      $('f-authors').value = data.authors.join(', ');
-      $('f-cats').value    = data.categories.join(', ');
       // Replace save button
-      overlay.querySelector('[onclick="saveBook()"]').setAttribute('onclick', `updateBook(${data.id})`);
+      $('btn-save-book').setAttribute('onclick', `updateBook(${data.id})`);
     },10);
     return;
   }
@@ -1147,77 +1311,88 @@ function closeModal(e) {
 }
 
 // ─── Save Actions ────────────────────────────
-function saveBook() {
+async function saveBook() {
   const t=$('f-title').value.trim(), e=$('f-edition').value.trim(), i=$('f-isbn').value.trim();
   if(!t||!i) return toast('Title and ISBN are required','error');
-  const id = Math.max(...DB.books.map(b=>b.id)) + 1;
-  DB.books.push({id, title:t, edition:e, isbn:i,
-    authors: $('f-authors').value.split(',').map(s=>s.trim()).filter(Boolean),
-    categories: $('f-cats').value.split(',').map(s=>s.trim()).filter(Boolean)
+  
+  $('btn-save-book').disabled = true;
+  const res = await fetchAPI('books', {
+    method: 'POST',
+    body: JSON.stringify({ title: t, edition: e, isbn: i })
   });
-  $('modal-overlay').classList.remove('open');
-  render.books();
-  toast('Book added successfully ✓');
+  if(res) {
+    closeModal();
+    render.books();
+    toast('Book added successfully ✓');
+  } else {
+    $('btn-save-book').disabled = false;
+  }
 }
-function updateBook(id) {
-  const b = DB.books.find(x=>x.id===id);
-  b.title = $('f-title').value.trim();
-  b.edition = $('f-edition').value.trim();
-  b.isbn = $('f-isbn').value.trim();
-  b.authors = $('f-authors').value.split(',').map(s=>s.trim()).filter(Boolean);
-  b.categories = $('f-cats').value.split(',').map(s=>s.trim()).filter(Boolean);
-  $('modal-overlay').classList.remove('open');
-  render.books();
-  toast('Book updated ✓');
+async function updateBook(id) {
+  const t=$('f-title').value.trim(), e=$('f-edition').value.trim(), i=$('f-isbn').value.trim();
+  if(!t||!i) return toast('Title and ISBN are required','error');
+
+  $('btn-save-book').disabled = true;
+  const res = await fetchAPI('books?book_id=eq.'+id, {
+    method: 'PATCH',
+    body: JSON.stringify({ title: t, edition: e, isbn: i })
+  });
+  if(res) {
+    closeModal();
+    render.books();
+    toast('Book updated ✓');
+  } else {
+    $('btn-save-book').disabled = false;
+  }
 }
-function saveMember() {
+async function saveMember() {
   const n=$('f-name').value.trim();
   if(!n) return toast('Name is required','error');
-  const id = Math.max(...DB.members.map(m=>m.id)) + 1;
-  DB.members.push({id, name:n, type:$('f-type').value, phones:[$('f-phone').value.trim()], address:$('f-addr').value.trim()});
-  $('modal-overlay').classList.remove('open');
-  render.members();
-  toast('Member added ✓');
+
+  $('btn-save-member').disabled = true;
+  const res = await fetchAPI('members', {
+    method: 'POST',
+    body: JSON.stringify({ name: n, membership_type: $('f-type').value })
+  });
+  if(res) {
+    closeModal();
+    render.members();
+    toast('Member added ✓');
+  } else {
+    $('btn-save-member').disabled = false;
+  }
 }
-function saveLoan() {
+async function saveLoan() {
   const mid=Number($('f-mid').value), bid=Number($('f-bid').value), issue=$('f-issue').value, due=$('f-due').value;
   if(!due) return toast('Due date is required','error');
-  const id = 'L' + String(DB.loans.length+1).padStart(3,'0');
-  DB.loans.push({id, memberId:mid, bookId:bid, issue, due, returned:null});
-  $('modal-overlay').classList.remove('open');
-  render.loans();
-  toast('Loan issued ✓');
-}
-function saveStaff() {
-  const n=$('f-sname').value.trim();
-  if(!n) return toast('Name is required','error');
-  const id = Math.max(...DB.staff.map(s=>s.id)) + 1;
-  DB.staff.push({id, name:n, role:$('f-srole').value.trim(), phones:[$('f-sphone').value.trim()],
-    sections:$('f-ssec').value.split(',').map(s=>s.trim()).filter(Boolean), address:$('f-saddr').value.trim()});
-  $('modal-overlay').classList.remove('open');
-  render.staff();
-  toast('Staff added ✓');
+
+  $('btn-save-loan').disabled = true;
+  const res = await fetchAPI('loans', {
+    method: 'POST',
+    body: JSON.stringify({ member_id: mid, issued_book_id: bid, issue_date: issue, due_date: due })
+  });
+  if(res) {
+    closeModal();
+    render.loans();
+    toast('Loan issued ✓');
+  } else {
+    $('btn-save-loan').disabled = false;
+  }
 }
 
 // ─── Search ──────────────────────────────────
+let searchTimeout;
 function globalSearch(q) {
-  q = q.toLowerCase();
-  if(!q) { render.books?.(); return; }
-  const filtered = DB.books.filter(b =>
-    b.title.toLowerCase().includes(q) ||
-    b.authors.some(a=>a.toLowerCase().includes(q)) ||
-    b.isbn.includes(q)
-  );
-  $('books-tbody').innerHTML = filtered.map(b=>`
-    <tr>
-      <td class="mono">B${b.id}</td>
-      <td><strong>${b.title}</strong></td>
-      <td>${b.authors.join(', ')}</td>
-      <td>${b.categories.map(c=>`<span class="tag">${c}</span>`).join('')}</td>
-      <td>${b.edition}</td>
-      <td class="mono">${b.isbn}</td>
-      <td>—</td>
-    </tr>`).join('') || '<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:24px;">No results</td></tr>';
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    // Determine active section and pass search
+    const activeSec = document.querySelector('.section.active').id;
+    if (activeSec === 'sec-books') render.books(1, q);
+    else if (activeSec === 'sec-loans') render.loans(1, q);
+    else {
+      toast('Search only enabled for Books and Loans', 'warn');
+    }
+  }, 300);
 }
 
 // ─── Toast ───────────────────────────────────
@@ -1234,3 +1409,4 @@ render.dashboard();
 </script>
 </body>
 </html>
+  
