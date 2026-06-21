@@ -1,0 +1,8 @@
+# Create .gitignore
+@"
+node_modules/
+*.log
+.env
+.DS_Store
+backend/node_modules/
+"@ | Out-File -Encoding utf8 .gitignore
